@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS `Habitacion`;
+CREATE TABLE `Habitacion` (
+  `id` int(6) unsigned NOT NULL AUTO_INCREMENT,
+  `piso` int(6) NOT NULL,
+  `numero` int(6) NOT NULL,
+  `tipo` varchar(30) NOT NULL,
+  `capacidad` int(6) NOT NULL,
+  `status` tinyint(1) unsigned DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;

@@ -1,0 +1,15 @@
+{{ define "Edit" }}
+  {{ template "Header" }}
+    {{ template "Menu" }} 
+   <h2>Edit Tarea and Descripcion</h2>  
+    <form method="POST" action="update">
+      <input type="hidden" habitacion="uid" value="{{ .Id }}" />
+      <label> Piso </label><input type="text" name="piso" value="{{ .Piso }}"  /><br />
+      <label> Numero </label><input type="text" name="numero" value="{{ .Numero }}"  /><br />
+      <label> Tipo </label><input type="text" name="tipo" value="{{ .Tipo }}"  /><br />
+      <label> Capacidad </label><input type="text" name="capacidad" value="{{ .Capacidad }}"  /><br />
+      <label> Reservado </label><input type="text" name="reservado" value="{{ .Status }}"  /><br />
+      <input type="submit" value="Save habitacion" />
+    </form><br />    
+  {{ template "Footer" }}
+{{ end }}

@@ -1,0 +1,11 @@
+{{ define "Show" }}
+  {{ template "Header" }}
+    {{ template "Menu"  }}
+    <h2> Register {{ .Id }} </h2>
+      <p>Piso {{ .Piso }}</p>
+      <p>Numero:  {{ .Numero }}</p>
+      <p>Tipo: {{ .Tipo }}</p>
+      <p>Capacidad:  {{ .Capacidad }}</p>
+      <p>Reservado: {{ .Reservado }}</p><br /> <a href="/edit?id={{ .Id }}">Edit</a></p>
+  {{ template "Footer" }}
+{{ end }}
