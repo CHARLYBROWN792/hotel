@@ -1,0 +1,13 @@
+{{ define "Edit" }}
+  {{ template "Header" }}
+    {{ template "Menu" }} 
+   <h2>Edit Tipos de habitaciones</h2>  
+    <form method="POST" action="update">
+      <input type="hidden" tipo="uid" value="{{ .Id }}" />
+      <label> Nombre </label><input type="text" name="nombre" value="{{ .Nombre }}"  /><br />
+      <label> Capacidad </label><input type="text" name="capacidad" value="{{ .Capacidad }}"  /><br />
+      <label> Descripcion </label><input type="text" name="descripcion" value="{{ .Descripcion }}"  /><br />
+      <input type="submit" value="Save tipo de habitacion" />
+    </form><br />    
+  {{ template "Footer" }}
+{{ end }}

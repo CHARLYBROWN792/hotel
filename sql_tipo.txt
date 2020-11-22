@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS `Tipo`;
+CREATE TABLE `Tipo` (
+  `id` int(6) unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(30) NOT NULL,
+  `capacidad` int(6) NOT NULL,
+  `descripcion` varchar(30) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;

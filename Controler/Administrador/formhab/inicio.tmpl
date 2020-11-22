@@ -1,0 +1,14 @@
+{{ define "Index" }}
+  {{ template "Header" }}
+    {{ template "Menu"  }}
+    <h2>Rellene el siguiente formulario</h2>
+	<body>
+		<form method="POST" action="insert">
+ 		   	Introduzca Numero De Pisos:<input type="text" name="piso">
+ 		   	Introduzca Numero De Habitaciones por piso:<input type="text" name="habitacion">
+ 		   	<input type="submit" value="Ingresar">
+		</form>
+	</body>
+	</html>
+	{{ template "Footer" }}
+{{ end }}

@@ -1,0 +1,12 @@
+{{ define "New" }}
+  {{ template "Header" }}
+    {{ template "Menu" }} 
+   <h2>Nuevo Tipo de habitacion</h2>  
+    <form method="POST" action="insert">
+      <label> Nombre </label><input type="text" name="nombre" /><br />
+      <label> Capacidad </label><input type="text" name="capacidad" /><br />
+      <label> Descripcion </label><input type="text" name="descripcion" /><br />
+      <input type="submit" value="Save tipo" />
+    </form>
+  {{ template "Footer" }}
+{{ end }}
