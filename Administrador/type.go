@@ -61,7 +61,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
     defer db.Close()
 }
 
-func Showtip(w http.ResponseWriter, r *http.Request) {
+func Show(w http.ResponseWriter, r *http.Request) {
     db := dbConn()
     nId := r.URL.Query().Get("id")
     selDB, err := db.Query("SELECT * FROM Tipo WHERE id=?", nId)
@@ -85,11 +85,11 @@ func Showtip(w http.ResponseWriter, r *http.Request) {
     defer db.Close()
 }
 
-func Newtip(w http.ResponseWriter, r *http.Request) {
+func New(w http.ResponseWriter, r *http.Request) {
     tmpl.ExecuteTemplate(w, "New", nil)
 }
 
-func Edittip(w http.ResponseWriter, r *http.Request) {
+func Edit(w http.ResponseWriter, r *http.Request) {
     db := dbConn()
     nId := r.URL.Query().Get("id")
     selDB, err := db.Query("SELECT * FROM Tipo WHERE id=?", nId)
@@ -113,7 +113,8 @@ func Edittip(w http.ResponseWriter, r *http.Request) {
     defer db.Close()
 }
 
-func Inserttip(w http.ResponseWriter, r *http.Request) {
+
+func Insert(w http.ResponseWriter, r *http.Request) {
     db := dbConn()
     if r.Method == "POST" {
         nombre := r.FormValue("nombre")
@@ -130,7 +131,7 @@ func Inserttip(w http.ResponseWriter, r *http.Request) {
     http.Redirect(w, r, "/", 301)
 }
 
-func Updatetip(w http.ResponseWriter, r *http.Request) {
+func Update(w http.ResponseWriter, r *http.Request) {
     db := dbConn()
     if r.Method == "POST" {
         nombre := r.FormValue("nombre")
@@ -148,7 +149,7 @@ func Updatetip(w http.ResponseWriter, r *http.Request) {
     http.Redirect(w, r, "/", 301)
 }
 
-func Deletetip(w http.ResponseWriter, r *http.Request) {
+func Delete(w http.ResponseWriter, r *http.Request) {
     db := dbConn()
     tipo := r.URL.Query().Get("id")
     delForm, err := db.Prepare("DELETE FROM Tipo WHERE id=?")
@@ -164,11 +165,11 @@ func Deletetip(w http.ResponseWriter, r *http.Request) {
 func main() {
     log.Println("Server started on: http://localhost:8080")
     http.HandleFunc("/", Index)
-    http.HandleFunc("/showtip", Showtip)
-    http.HandleFunc("/newtip", Newtip)
-    http.HandleFunc("/edittip", Edittip)
-    http.HandleFunc("/inserttip", Inserttip)
-    http.HandleFunc("/updatetip", Updatetip)
-    http.HandleFunc("/deletetip", Deletetip)
+    http.HandleFunc("/show", Show)
+    http.HandleFunc("/new", New)
+    http.HandleFunc("/edit", Edit)
+    http.HandleFunc("/insert", Insert)
+    http.HandleFunc("/update", Update)
+    http.HandleFunc("/delete", Delete)
     http.ListenAndServe(":8080", nil)
 }

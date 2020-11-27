@@ -6,7 +6,7 @@
       <thead>
       <tr>
         <td>ID</td>
-        <td>Tarea</td>
+        <td>Nombre</td>
         <td>Capacidad</td>
         <td>Descripcion</td>
         <td>View</td>
@@ -18,9 +18,9 @@
     {{ range . }}
       <tr>
         <td>{{ .Id }}</td>
-        <td>{{ .Tarea }}</td>
-        <td>{{ .Capacidad }}</td>
-        <td>{{ .Descripcion }} </td> 
+        <td> {{ .Nombre }} </td>
+        <td>{{ .Capacidad }} </td> 
+        <td>{{ .Descripcion }} </td>
         <td><a href="/show?id={{ .Id }}">View</a></td>
         <td><a href="/edit?id={{ .Id }}">Edit</a></td>
         <td><a href="/delete?id={{ .Id }}">Delete</a><td>
@@ -30,3 +30,4 @@
     </table>
   {{ template "Footer" }}
 {{ end }}
+

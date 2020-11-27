@@ -17,7 +17,7 @@ type Habitacion struct {
 	Numero int
 	Tipo string
 	Capacidad int
-	Reservado int
+	Reservado bool
 }
 
 //Funcion para crear la conexion al servidor mysql
@@ -45,16 +45,53 @@ func leernum() int {
 	return (n)
 }
 
+//Funcion para pasar un booleano a INT
+func BoolInt(b bool) int {
+	// The compiler currently only optimizes this form.
+	// See issue 6011.
+	var i int
+	if b {
+		i = 1
+	} else {
+		i = 0
+	}
+	return i
+}
+
+//funcion para pasar un String a INT
+func StringINT(i string) int{
+    var n int
+    if i == "false"{
+        n = 0
+    } else if i =="true"{
+        n = 1
+    }
+    return n
+}
+
+//funcion para pasar un INT a booleano
+func IntBool(i int) bool{
+    var b bool = i != 0
+    return b
+}
+
 func Inserthabdefecto(n1 int, n2 int) {
     db := dbConn()
     var Id int
-    for i := 1; i <= n1 {
+    var piso int
+    var numero int
+    var tipo string
+    var capacidad int
+    for i := 1; i <= n1; i++ {
         for j := 1; j <= n2; j++{                       	
-            Id := Id + 1
-            piso := i
-		    numero := j
-            tipo := ""
-            capacidad := 0	
+            Id = Id + 1
+            piso = i
+            numero = j
+            tipo = ""
+            capacidad = 0
+            if numero < 10{
+                numero = 0 + numero
+            }
                 insForm, err := db.Prepare("INSERT INTO Habitacion(Id, piso, numero, tipo, capacidad) VALUES(?,?,?,?,?)")
                 if err != nil {
                     panic(err.Error())
@@ -62,7 +99,7 @@ func Inserthabdefecto(n1 int, n2 int) {
             insForm.Exec(Id, piso, numero, tipo, capacidad)
         }
     }
-    defer db.Close()
+  defer db.Close()
 }
 
 //Funcion para contar cuantos registros hay dentro de la tabla Habitacion
@@ -82,7 +119,8 @@ func CountTotalHabitacion() int {
             log.Fatal(err)
         }
     }
-    return (count)        
+    return (count)
+        
 }
 
 
@@ -95,8 +133,7 @@ func DeleteHabitacion(n1 int) {
             panic(err.Error())
         }
         delForm.Exec(i)
-        log.Println("DELETE")
-              
+        log.Println("DELETE")              
     }
     defer db.Close()
 }
@@ -116,7 +153,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
     for selDB.Next() {
         var id, piso, numero, capacidad int
 		var tipo string
-		var reservado int
+		var reservado bool
         err = selDB.Scan(&id, &piso, &numero, &tipo, &capacidad, &reservado)
         if err != nil {
             panic(err.Error())
@@ -133,7 +170,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
     defer db.Close()
 }
 
-func Showhab(w http.ResponseWriter, r *http.Request) {
+func Show(w http.ResponseWriter, r *http.Request) {
     db := dbConn()
     nId := r.URL.Query().Get("id")
     selDB, err := db.Query("SELECT * FROM Habitacion WHERE id=?", nId)
@@ -144,7 +181,7 @@ func Showhab(w http.ResponseWriter, r *http.Request) {
     for selDB.Next() {
         var id, piso, numero, capacidad int
 		var tipo string
-		var reservado int
+		var reservado bool
         err = selDB.Scan(&id, &piso, &numero, &tipo, &capacidad, &reservado)
         if err != nil {
             panic(err.Error())
@@ -160,11 +197,11 @@ func Showhab(w http.ResponseWriter, r *http.Request) {
     defer db.Close()
 }
 
-func Newhab(w http.ResponseWriter, r *http.Request) {
+func New(w http.ResponseWriter, r *http.Request) {
     tmpl.ExecuteTemplate(w, "New", nil)
 }
 
-func Edithab(w http.ResponseWriter, r *http.Request) {
+func Edit(w http.ResponseWriter, r *http.Request) {
     db := dbConn()
     nId := r.URL.Query().Get("id")
     selDB, err := db.Query("SELECT * FROM Habitacion WHERE id=?", nId)
@@ -175,7 +212,7 @@ func Edithab(w http.ResponseWriter, r *http.Request) {
     for selDB.Next() {
         var id, piso, numero, capacidad int
 		var tipo string
-		var reservado int
+		var reservado bool
         err = selDB.Scan(&id, &piso, &numero, &tipo, &capacidad, &reservado)
         if err != nil {
             panic(err.Error())
@@ -191,46 +228,45 @@ func Edithab(w http.ResponseWriter, r *http.Request) {
     defer db.Close()
 }
 
-func Inserthab(w http.ResponseWriter, r *http.Request) {
+func Insert(w http.ResponseWriter, r *http.Request) {
     db := dbConn()
     if r.Method == "POST" {
 		piso := r.FormValue("piso")
 		numero := r.FormValue("numero")
         tipo := r.FormValue("tipo")
         capacidad := r.FormValue("capacidad")
-        reservado := r.FormValue("reservado")	
-        insForm, err := db.Prepare("INSERT INTO Habitacion(piso, numero, tipo, capacidad, reservado) VALUES(?,?,?,?,?)")
+        insForm, err := db.Prepare("INSERT INTO Habitacion(piso, numero, tipo, capacidad) VALUES(?,?,?,?)")
         if err != nil {
             panic(err.Error())
         }
-        insForm.Exec(piso, numero, tipo, capacidad, reservado)
-        log.Println("INSERT: Piso: " + piso + " | Numero: " + numero + "Tipo: " + tipo + " | Capacidad: " + capacidad + " | Reservado: " + reservado )
+        insForm.Exec(piso, numero, tipo, capacidad)
+        log.Println("INSERT: Piso: " + piso + " | Numero: " + numero + "Tipo: " + tipo + " | Capacidad: " + capacidad)
     }
     defer db.Close()
     http.Redirect(w, r, "/", 301)
 }
 
-func Updatehab(w http.ResponseWriter, r *http.Request) {
+func Update(w http.ResponseWriter, r *http.Request) {
     db := dbConn()
     if r.Method == "POST" {
         piso := r.FormValue("piso")
 		numero := r.FormValue("numero")
         tipo := r.FormValue("tipo")
-        capacidad := r.FormValue("capacidad")
-        reservado := r.FormValue("reservado")		
+        capacidad := r.FormValue("capacidad")	
+        reservado := r.FormValue("reservado")
         id := r.FormValue("uid")
         insForm, err := db.Prepare("UPDATE Habitacion SET piso=?, numero=?, tipo=?, capacidad=?, reservado=? WHERE id=?")
         if err != nil {
             panic(err.Error())
         }
         insForm.Exec(piso, numero, tipo, capacidad, reservado, id)
-        log.Println("UPDATE: Piso: " + piso + " | Numero: " + numero + "Tipo: " + tipo + " | Capacidad: " + capacidad + " | Reservado: " + reservado )
+        log.Println("UPDATE: Piso: " + piso + " | Numero: " + numero + "Tipo: " + tipo + " | Capacidad: " + capacidad + " | Reservado: " + reservado)
     }
     defer db.Close()
     http.Redirect(w, r, "/", 301)
 }
 
-func Deletehab(w http.ResponseWriter, r *http.Request) {
+func Delete(w http.ResponseWriter, r *http.Request) {
     db := dbConn()
     habitacion := r.URL.Query().Get("id")
     delForm, err := db.Prepare("DELETE FROM Habitacion WHERE id=?")
@@ -263,14 +299,15 @@ func main() {
         } 
         cha = CountTotalHabitacion()
     }
- 
+
+        
     log.Println("Server started on: http://localhost:8080")
     http.HandleFunc("/", Index)
-    http.HandleFunc("/showhab", Showhab)
-    http.HandleFunc("/newhab", Newhab)
-    http.HandleFunc("/edithab", Edithab)
-    http.HandleFunc("/inserthab", Inserthab)
-    http.HandleFunc("/updatehab", Updatehab)
-    http.HandleFunc("/deletehab", Deletehab)
+    http.HandleFunc("/show", Show)
+    http.HandleFunc("/new", New)
+    http.HandleFunc("/edit", Edit)
+    http.HandleFunc("/insert", Insert)
+    http.HandleFunc("/update", Update)
+    http.HandleFunc("/delete", Delete)
     http.ListenAndServe(":8080", nil)
 }
